@@ -8,7 +8,7 @@ let columnMapping = {}; // Mapowanie kolumn
 
 // ===== API KEY - WKLEJ TUTÓJ SWÓJ KLUCZ GEMINI API =====
 // Instrukcja: https://aistudio.google.com/app/apikey
-const API_KEY = 'AIzaSyBDg3l3L-4nD-TDlpZLcw-n2lOhLUa7Eh8';  // ✅ Klucz GTV Poland
+const API_KEY = 'AIzaSyDE1j5yBRy3SKE5te7B8UdbBn3L23-wk8g';  // ✅ Klucz GTV Poland
 
 // Walidacja klucza przy starcie
 if (!API_KEY || API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
