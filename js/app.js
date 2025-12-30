@@ -776,7 +776,7 @@ function validateAndEnsureUniqueness(content, productData) {
     // V7.0.6 ULTIMATE: PLACEHOLDERS KILL-SWITCH
     console.log('PLACEHOLDERS CHECK: Sprawdzam tokeny niedozwolone...');
     
-    const placeholderTokens = ['xx', '...', 'Spra...', 'nog...', '[TBD]', '[FILL]', 'Lorem ipsum'];
+    const placeholderTokens = ['xx', '[TBD]', '[FILL]', 'Lorem ipsum', 'Producent nie podał', 'Brak danych'];
     const allContent = [
         content.metaTitle || '',
         content.metaDescription || '',
@@ -791,10 +791,10 @@ function validateAndEnsureUniqueness(content, productData) {
         }
     });
     
-    // Sprawdz urwane slowa (ends with ... but not ...)
-    const truncatedPattern = /\b\w+\.{3}(?!\.)/ ;
+    // Sprawdź urwane słowa (słowo+wielokropek, np. "Spra..." ale nie normalny wielokropek "...")
+    const truncatedPattern = /\b[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]{2,}\.{2,}/;
     if (truncatedPattern.test(allContent)) {
-        foundPlaceholders.push('URWANE SLOWA');
+        foundPlaceholders.push('URWANE SLOWA (słowo skrócone wielokropkiem)');
     }
     
     if (foundPlaceholders.length > 0) {
