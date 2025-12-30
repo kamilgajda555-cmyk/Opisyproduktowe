@@ -257,9 +257,39 @@ ${bannedFluff.map(f => `- ❌ "${f.banned}" → ✅ "${f.replace}"`).join('\n')}
 - **MAKSIMUM:** ${profileConfig.maxChars} znaków **<-- NIE PRZEKRACZAJ!**
 
 Jeśli opis będzie dłuższy niż ${profileConfig.maxChars} znaków:
-1. Usuń ostatnią sekcję (podsumowanie/CTA)
-2. Skróć akapity do kluczowych informacji
-3. Priorytet: dane techniczne > zastosowanie > korzyści
+1. **NIE usuwaj całych sekcji** - zachowaj strukturę!
+2. **Skróć KAŻDY akapit proporcjonalnie** - zostaw samo mięso
+3. **Priorytet treści:** dane techniczne > zastosowanie > korzyści > teoria
+4. **Co skracać:**
+   - Usuń ozdobniki i powtórzenia
+   - Usuń ogólnikowe wprowadzenia ("Produkt charakteryzuje się...")
+   - Skróć przykłady do 1-2 zdań
+   - Zachowaj WSZYSTKIE liczby, parametry, normy
+5. **Czego NIE skracać:**
+   - Specyfikacja techniczna (tabela) - zawsze pełna!
+   - Parametry liczbowe (napięcie, wymiary, waga)
+   - Normy i certyfikaty
+   - Sekcja "💡 Dlaczego warto?" - zawsze 3 zdania!
+
+**PRZYKŁAD SKRACANIA:**
+
+❌ ZŁY SPOSÓB (usuwa całe sekcje):
+  H2: Tytuł
+  P: Wstęp...
+  H3: Funkcje
+  P: Akapit o funkcjach...
+  [X] USUWA CAŁĄ SEKCJĘ "Zastosowanie" [X]
+  H3: Specyfikacja
+  
+✅ DOBRY SPOSÓB (skraca proporcjonalnie każdy akapit):
+  H2: Tytuł
+  P: Wstęp skrócony do 2 zdań.
+  H3: Funkcje
+  P: Pomiar AC/DC 0-600V, prąd 0-10A, rezystancja 0-20M. Auto-range.
+  H3: Zastosowanie
+  P: Warsztat: diagnostyka 12V/24V. Dom: gniazdka. Elektryka: instalacje.
+  H3: Specyfikacja
+  TABLE: PEŁNA TABELA - NIE SKRACAĆ!
 
 ---
 

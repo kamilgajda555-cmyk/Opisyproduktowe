@@ -1914,29 +1914,21 @@ function shortenLongDescription(html, targetMaxLength) {
         return html; // Już OK
     }
     
-    console.warn(`⚠️ Opis przekracza limit (${plainText.length} > ${targetMaxLength}), ale ZACHOWUJĘ PEŁNĄ TREŚĆ!`);
-    console.warn(`ℹ️ Gemini 2.5 Pro generuje optymalne opisy - NIE SKRACAM!`);
+    console.warn(`⚠️ Opis przekracza limit (${plainText.length} > ${targetMaxLength})`);
     
-    // ✅ NOWA STRATEGIA: Pozwól na +20% powyżej limitu (Gemini wie lepiej)
+    // ✅ STRATEGIA: Pozwól na +20% powyżej limitu (Gemini wie lepiej)
     if (plainText.length <= targetMaxLength * 1.2) {
-        console.log(`✅ Akceptuję długość ${plainText.length} (w granicach tolerancji +20%)`);
+        console.log(`✅ Akceptuję długość ${plainText.length} (tolerancja +20%)`);
         return html;
     }
     
-    // TYLKO jeśli NAPRAWDĘ za długi (>120% limitu), usuń ostatnią sekcję
-    console.warn(`⚠️ Opis BARDZO długi (${plainText.length} > ${targetMaxLength * 1.2}), usuwam ostatnią sekcję...`);
+    // Jeśli > 120% limitu, Gemini powinien był skrócić w prompcie
+    // ALE jeśli nie skrócił, akceptujemy całość (pełna treść > ograniczenia)
+    console.warn(`⚠️ Opis BARDZO długi (${plainText.length} > ${targetMaxLength * 1.2}), ale ZACHOWUJĘ całą treść!`);
+    console.warn(`ℹ️ Gemini dostał jasne instrukcje - jeśli nie skrócił, to była jego decyzja.`);
+    console.warn(`ℹ️ Pełna wartościowa treść > sztuczne limitowanie!`);
     
-    const sections = html.split(/<h[23]>/i);
-    if (sections.length <= 2) {
-        console.warn(`⚠️ Za mało sekcji, ZACHOWUJĘ cały opis!`);
-        return html; // Nie skracaj jeśli mało sekcji
-    }
-    
-    // Usuń TYLKO ostatnią sekcję (zwykle podsumowanie)
-    sections.pop();
-    const shortenedHtml = sections.join('<h3>');
-    console.log(`✅ Usunięto ostatnią sekcję, nowa długość: ${stripHtmlTags(shortenedHtml).length} znaków`);
-    return shortenedHtml;
+    return html; // Zachowaj CAŁĄ treść - Gemini zrobił swoje
 }
 
 
