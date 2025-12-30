@@ -78,6 +78,7 @@ Wygeneruj **SKANOWALNY, CZYTELNY** opis produktu dla karty e-commerce (nie artyk
 
 ## 📏 PROFIL: ${profileConfig.name.toUpperCase()}
 - **Długość:** ${profileConfig.minChars}-${profileConfig.maxChars} znaków (cel: ${profileConfig.targetChars})
+- **⚠️ MAKSIMUM ABSOLUTNE: ${profileConfig.maxChars} znaków - NIE PRZEKRACZAJ!**
 - **Typ:** ${profileConfig.description}
 
 ---
@@ -248,6 +249,20 @@ ${bannedFluff.map(f => `- ❌ "${f.banned}" → ✅ "${f.replace}"`).join('\n')}
 
 ---
 
+## ⚠️ OSTATNIE PRZYPOMNIENIE O DŁUGOŚCI
+
+**DESCRIPTION FIELD:**
+- **MINIMUM:** ${profileConfig.minChars} znaków
+- **OPTYMALNIE:** ${profileConfig.targetChars} znaków
+- **MAKSIMUM:** ${profileConfig.maxChars} znaków **<-- NIE PRZEKRACZAJ!**
+
+Jeśli opis będzie dłuższy niż ${profileConfig.maxChars} znaków:
+1. Usuń ostatnią sekcję (podsumowanie/CTA)
+2. Skróć akapity do kluczowych informacji
+3. Priorytet: dane techniczne > zastosowanie > korzyści
+
+---
+
 ## ✅ FORMAT WYJŚCIOWY (JSON)
 
 Zwróć JSON:
@@ -328,7 +343,8 @@ Idealny dla branży budowlanej, elektryków, prac wysokościowych. Dopasowanie 5
 Wygeneruj opis według powyższych reguł.
 
 **PAMIĘTAJ:**
-- Długość: ${profileConfig.targetChars} znaków (±10%)
+- **Długość OPTYMALNA: ${profileConfig.targetChars} znaków (±10%)**
+- **⚠️ Długość MAKSYMALNA: ${profileConfig.maxChars} znaków - NIE WIĘCEJ!**
 - Max 18 słów/zdanie
 - Max 60 słów/akapit
 - Keyword "${mainKeyword}" gęstość 1-2%
