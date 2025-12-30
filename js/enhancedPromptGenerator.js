@@ -153,12 +153,10 @@ Priorytet: typ > marka > model > cecha kluczowa > norma
 - **Ton:** Sprzedażowy ale faktyczny (BEZ patosu!)
 
 **Przykład:**
-```html
 <h3>💡 Dlaczego warto?</h3>
 <p>
-Nakolanniki HOGL zwiększają komfort pracy na kolanach nawet o 50%. Redukują ryzyko kontu zji i bólu stawów. Trwają latami dzięki wytrz ymałym materiałom.
+Nakolanniki HOGL zwiększają komfort pracy na kolanach nawet o 50%. Redukują ryzyko kontuzji i bólu stawów. Trwają latami dzięki wytrzymałym materiałom.
 </p>
-```
 
 ### 7. **CTA** (1 zdanie)
 Mocne zakończenie: "Zamów teraz!", "Dodaj do koszyka!", "Sprawdź dostępność!"
@@ -280,19 +278,19 @@ Zwróć JSON:
 ## ❌ ZŁY PRZYKŁAD (NIGDY TAK NIE PISZ!)
 
 **Bullet Points ZŁE:**
-```
+
 ❌ Kompletny zestaw narzędzi eliminujący potrzebę dodatkowych zakupów
 ❌ Profesjonalna jakość w przystępnej cenie
 ❌ Szybka dostawa 24h
-```
+
 **DLACZEGO ZŁE:** Generyczne, nie mówią NIC o produkcie!
 
 **Opis ZŁY:**
-```
+
 Produkt został wykonany z wysokiej jakości materiałów, co zapewnia wyjątkową trwałość i odporność n...
 Zaawansowane technologie produkcji pozwoliły osiągnąć doskonałe parametry jakościowe...
 Intuicyjny design sprawia, że obsługa produktu jest niezwykle prosta...
-```
+
 **DLACZEGO ZŁY:**
 - AI-fluff ('wysokiej jakości', 'zaawansowane technologie', 'intuicyjny design')
 - Urwane słowa ('n...')
