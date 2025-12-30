@@ -546,17 +546,7 @@ async function callGeminiAPI(prompt, language, style, productData = {}, keywordD
         ean = ''; // Wyzeruj nieprawidłowy EAN
     }
     
-    let verifiedData = null;
-    if (ean && ean.length >= 8) { // Tylko jeśli EAN ma min. 8 cyfr
-        console.log(`🔍 Weryfikacja produktu: EAN=${ean}, SKU=${sku}`);
-        verifiedData = await verifyProductByEAN(ean, sku);
-        
-        if (verifiedData) {
-            console.log(`✅ Znaleziono dane w bazie ${verifiedData.source}`);
-            // Wzbogać context o zweryfikowane dane
-            context += `\n\nZWERYFIKOWANE DANE ONLINE:\nNazwa: ${verifiedData.name || 'N/A'}\nMarka: ${verifiedData.brand || 'N/A'}\nKategoria: ${verifiedData.category || verifiedData.categories || 'N/A'}\nOpis producenta: ${verifiedData.description || 'N/A'}`;
-        }
-    }
+    // Weryfikacja EAN została usunięta - generujemy tylko z danych CSV
     
     // Krok 2: Pobierz poprzednie opisy dla kontroli unikalności
     const previousDescriptions = Array.from(generatedContents.values());
@@ -564,29 +554,28 @@ async function callGeminiAPI(prompt, language, style, productData = {}, keywordD
     // Krok 3: Prompt już został zbudowany przez Enhanced Prompt Generator
     // (prompt jest przekazany jako argument funkcji)
     
-    try {
-        // Próba 1: OpenAI GPT-4o-mini (najlepszy stosunek ceny do jakości)
-        const openaiResult = await callOpenAI(prompt);
-        if (openaiResult) return validateAndEnsureUniqueness(openaiResult, productData);
-    } catch (error) {
-        console.warn('⚠️ OpenAI niedostępne, próba Anthropic Claude...');
-    }
+    // 🚀 TWO-STAGE GENERATION: Gemini 2.5 Pro TYLKO
+    console.log('🚀 TWO-STAGE GENERATION: Używam tylko Gemini 2.5 Pro');
     
     try {
-        // Próba 2: Anthropic Claude Haiku (szybki i tani)
-        const claudeResult = await callClaude(prompt);
-        if (claudeResult) return validateAndEnsureUniqueness(claudeResult, productData);
+        // ETAP 1: Generacja treści (opis + bullets + whyWorthIt)
+        console.log('🎯 ETAP 1: Generacja treści...');
+        const stage1Result = await callGeminiDirect(prompt); // prompt z Enhanced Prompt Generator
+        
+        if (!stage1Result) {
+            throw new Error('ETAP 1 failed: brak odpowiedzi z Gemini');
+        }
+        
+        console.log('✅ ETAP 1 zakończony');
+        
+        // ETAP 2: Walidacja i format (JSON + meta)
+        // TODO: Implementacja ETAPU 2 w następnym commicie
+        
+        return validateAndEnsureUniqueness(stage1Result, productData);
+        
     } catch (error) {
-        console.warn('⚠️ Claude niedostępny, próba Gemini...');
-    }
-    
-    try {
-        // Próba 3: Google Gemini (ostatnia deska ratunku)
-        const geminiResult = await callGeminiDirect(prompt);
-        if (geminiResult) return validateAndEnsureUniqueness(geminiResult, productData);
-    } catch (error) {
-        console.error('❌ Gemini niedostępny - NIE używam AI-fluff fallback!');
-        console.error('❌ Rzucam błąd zamiast generować generic treść!');
+        console.error('❌ Gemini 2.5 Pro niedostępny!');
+        console.error('❌ Błąd:', error.message);
         throw new Error(`Gemini API failed: ${error.message}`);
     }
     
