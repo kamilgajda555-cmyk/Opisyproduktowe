@@ -872,7 +872,7 @@ function validateAndEnsureUniqueness(content, productData) {
     
     // Wykryj profil długości produktu
     let targetMinLength = 1200;  // standard
-    let targetMaxLength = 2200;
+    let targetMaxLength = 5000;  // ✅ ZWIĘKSZONE Z 2200 → 5000 (pozwala na pełne opisy Gemini)
     
     if (typeof window.enhancedPromptGenerator !== 'undefined') {
         const profile = window.enhancedPromptGenerator.detectLengthProfile(productData);
@@ -1906,70 +1906,39 @@ function enhanceLongDescription(html, currentLength) {
 
 // 🔥 V7.0.6 ULTIMATE: Skróć opis jeśli za długi
 function shortenLongDescription(html, targetMaxLength) {
-    console.log(`✏️ Skracanie opisu do ${targetMaxLength} znaków...`);
+    console.log(`✏️ Sprawdzam długość opisu (max: ${targetMaxLength} znaków)...`);
     
     const plainText = stripHtmlTags(html);
     if (plainText.length <= targetMaxLength) {
+        console.log(`✅ Długość OK: ${plainText.length} znaków`);
         return html; // Już OK
     }
     
-    // Strategia: Usuń ostatnią sekcję (podsumowanie) i spróbuj ponownie
-    const sections = html.split(/<h[23]>/i);
+    console.warn(`⚠️ Opis przekracza limit (${plainText.length} > ${targetMaxLength}), ale ZACHOWUJĘ PEŁNĄ TREŚĆ!`);
+    console.warn(`ℹ️ Gemini 2.5 Pro generuje optymalne opisy - NIE SKRACAM!`);
     
-    if (sections.length <= 3) {
-        // Za mało sekcji, skróć tekst proporcjonalnie
-        const ratio = targetMaxLength / plainText.length;
-        const shortenedHtml = truncateHtmlProportionally(html, ratio);
-        return shortenedHtml;
+    // ✅ NOWA STRATEGIA: Pozwól na +20% powyżej limitu (Gemini wie lepiej)
+    if (plainText.length <= targetMaxLength * 1.2) {
+        console.log(`✅ Akceptuję długość ${plainText.length} (w granicach tolerancji +20%)`);
+        return html;
     }
     
-    // Usuń ostatnią sekcję
+    // TYLKO jeśli NAPRAWDĘ za długi (>120% limitu), usuń ostatnią sekcję
+    console.warn(`⚠️ Opis BARDZO długi (${plainText.length} > ${targetMaxLength * 1.2}), usuwam ostatnią sekcję...`);
+    
+    const sections = html.split(/<h[23]>/i);
+    if (sections.length <= 2) {
+        console.warn(`⚠️ Za mało sekcji, ZACHOWUJĘ cały opis!`);
+        return html; // Nie skracaj jeśli mało sekcji
+    }
+    
+    // Usuń TYLKO ostatnią sekcję (zwykle podsumowanie)
     sections.pop();
     const shortenedHtml = sections.join('<h3>');
-    
-    // Sprawdź czy wystarczy
-    const newPlainText = stripHtmlTags(shortenedHtml);
-    if (newPlainText.length <= targetMaxLength) {
-        return shortenedHtml;
-    }
-    
-    // Jeszcze za długi, skróć proporcjonalnie
-    const ratio = targetMaxLength / newPlainText.length;
-    return truncateHtmlProportionally(shortenedHtml, ratio);
+    console.log(`✅ Usunięto ostatnią sekcję, nowa długość: ${stripHtmlTags(shortenedHtml).length} znaków`);
+    return shortenedHtml;
 }
 
-// Helper: Skróć HTML proporcjonalnie zachowując strukturę
-function truncateHtmlProportionally(html, ratio) {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    const paragraphs = doc.querySelectorAll('p');
-    
-    paragraphs.forEach(p => {
-        const text = p.textContent;
-        const targetLen = Math.floor(text.length * ratio);
-        
-        if (text.length > targetLen) {
-            // Skróć do ostatniego zdania
-            const truncated = text.substring(0, targetLen);
-            const lastPeriod = truncated.lastIndexOf('.');
-            
-            if (lastPeriod > targetLen * 0.7) {
-                p.textContent = truncated.substring(0, lastPeriod + 1);
-            } else {
-                // 🔧 FIX: Zamiast ucinać, znajdź ostatnią spację
-                const lastSpace = truncated.lastIndexOf(' ');
-                if (lastSpace > targetLen * 0.5) {
-                    // Utnij na spacji i dodaj kropkę
-                    p.textContent = truncated.substring(0, lastSpace).trim() + '.';
-                } else {
-                    // Zdanie za krótkie - zachowaj oryginał
-                    // (nie skracaj!)
-                }
-            }
-        }
-    });
-    
-    return doc.body.innerHTML;
-}
 
 function enhanceMetaDescription(desc) {
     if (!desc) return 'Wysokiej jakości produkt w atrakcyjnej cenie. Szybka dostawa, profesjonalna obsługa. Sprawdź szczegóły i zamów już dziś! Gwarancja satysfakcji.';

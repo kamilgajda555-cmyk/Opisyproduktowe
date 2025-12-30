@@ -11,22 +11,22 @@ const ECOMMERCE_RULES = {
         'standard': {
             name: 'Standard E-commerce',
             minChars: 1200,
-            maxChars: 2500,  // +300 dla "Dlaczego warto?"
-            targetChars: 2100,  // 1800 + 300
+            maxChars: 4000,  // ✅ ZWIĘKSZONE: 2500 → 4000 (pełne opisy Gemini 2.5 Pro)
+            targetChars: 3000,  // 2700 + 300
             description: 'Karty produktów, większość e-commerce (+ sekcja sprzedażowa)'
         },
         'technical': {
             name: 'Techniczne/B2B',
             minChars: 2200,
-            maxChars: 3800,  // +300 dla "Dlaczego warto?"
-            targetChars: 3100,  // 2800 + 300
+            maxChars: 5500,  // ✅ ZWIĘKSZONE: 3800 → 5500 (pełne opisy Gemini 2.5 Pro)
+            targetChars: 4500,  // 4200 + 300
             description: 'Produkty techniczne, narzędzia profesjonalne (+ sekcja sprzedażowa)'
         },
         'complex': {
             name: 'Złożone (zestawy)',
             minChars: 3500,
-            maxChars: 5300,  // +300 dla "Dlaczego warto?"
-            targetChars: 4500,  // 4200 + 300
+            maxChars: 7000,  // ✅ ZWIĘKSZONE: 5300 → 7000 (pełne opisy Gemini 2.5 Pro)
+            targetChars: 6000,  // 5700 + 300
             description: 'Zestawy narzędzi, maszyny, urządzenia wielofunkcyjne'
         }
     },
