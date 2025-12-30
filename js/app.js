@@ -9,7 +9,9 @@ let columnMapping = {}; // Mapowanie kolumn
 
 // ===== API KEY - WKLEJ TUTÓJ SWÓJ KLUCZ GEMINI API =====
 // Instrukcja: https://aistudio.google.com/app/apikey
-const API_KEY = 'AIzaSyC9iR__pLFUwTSz0OtAhSibFGu4pjc5Vyg';  // ✅ Klucz GTV Poland
+// ⚠️ WAŻNE: Klucz API powinien być w pliku .env (nie w repo!)
+const API_KEY = prompt('Wklej swój klucz Gemini API:', localStorage.getItem('gemini_api_key') || '');  // Pobierz z localStorage lub zapytaj użytkownika
+if (API_KEY) localStorage.setItem('gemini_api_key', API_KEY);  // Zapisz lokalnie
 
 // Walidacja klucza przy starcie
 if (!API_KEY || API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {

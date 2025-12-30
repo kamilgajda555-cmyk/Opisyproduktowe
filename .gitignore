@@ -1,0 +1,6 @@
+
+# API Keys (NIGDY NIE COMMITUJ!)
+.env
+.env.local
+js/api-key.js
+
