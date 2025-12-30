@@ -1,6 +1,7 @@
 // ===== GLOBAL STATE =====
 let productsData = [];
 let generatedDescriptions = [];
+let generatedContents = new Map(); // Mapa: productId -> opis (do kontroli unikalności)
 let selectedProducts = new Set();
 let rawCSVData = [];  // Surowe dane CSV przed mapowaniem
 let csvColumns = [];   // Kolumny z CSV
