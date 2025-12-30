@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Opisów Produktów - GTV Poland | AI SEO</title>
+    <meta name="description" content="Profesjonalny generator opisów produktów z AI dla GTV Poland. Automatyczna optymalizacja SEO, keywords analysis, quality scoring.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/branding.css">
+    <link rel="stylesheet" href="css/frontendEnhancements.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header with GTV Poland Branding -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo GTV Poland -->
+                <div class="logo-section">
+                    <div class="company-logo">
+                        <img src="img/gtv-logo.png" alt="GTV Poland" class="company-logo-img" style="height: 50px; width: auto;">
+                    </div>
+                    <div class="product-title">
+                        <i class="fas fa-robot"></i>
+                        <h1>Generator Opisów Produktów AI</h1>
+                    </div>
+                </div>
+                
+                <!-- Header Info -->
+                <div class="header-info">
+                    <div class="info-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>V7.0.2 Advanced</span>
+                    </div>
+                    <div class="info-badge">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Quality Scoring</span>
+                    </div>
+                    <div class="info-badge">
+                        <i class="fas fa-key"></i>
+                        <span>Keyword Analysis</span>
+                    </div>
+                </div>
+            </div>
+            <p class="tagline">
+                <i class="fas fa-sparkles"></i>
+                Automatyczne generowanie opisów SEO z wykorzystaniem Gemini 2.5 Pro AI
+                <span class="tagline-separator">|</span>
+                <i class="fas fa-shield-alt"></i>
+                Profesjonalne rozwiązanie dla GTV Poland
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Step 1: Upload CSV -->
+        <section class="card" id="upload-section">
+            <div class="card-header">
+                <i class="fas fa-upload"></i>
+                <h2>Krok 1: Wczytaj plik CSV z produktami</h2>
+            </div>
+            <div class="card-body">
+                <div class="upload-area" id="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Przeciągnij plik CSV tutaj lub kliknij, aby wybrać</p>
+                    <input type="file" id="csv-file-input" accept=".csv" hidden>
+                    <button class="btn btn-primary" onclick="document.getElementById('csv-file-input').click()">
+                        <i class="fas fa-folder-open"></i> Wybierz plik CSV
+                    </button>
+                </div>
+                <div class="file-info" id="file-info" style="display: none;">
+                    <i class="fas fa-file-csv"></i>
+                    <span id="file-name"></span>
+                    <span id="file-size"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 1.5: Column Mapping -->
+        <section class="card" id="mapping-section" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-exchange-alt"></i>
+                <h2>Krok 1.5: Mapowanie kolumn CSV</h2>
+            </div>
+            <div class="card-body">
+                <div class="mapping-info">
+                    <p><i class="fas fa-info-circle"></i> Dopasuj kolumny z Twojego pliku CSV do pól wymaganych przez aplikację. Pola oznaczone <strong>*</strong> są wymagane.</p>
+                </div>
+                
+                <div class="mapping-grid" id="mapping-grid">
+                    <!-- Mapping fields will be added dynamically -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="cancelMapping()">
+                        <i class="fas fa-times"></i> Anuluj
+                    </button>
+                    <button class="btn btn-primary" onclick="applyMapping()">
+                        <i class="fas fa-check"></i> Zastosuj mapowanie i kontynuuj
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Preview Data -->
+        <section class="card" id="preview-section" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-table"></i>
+                <h2>Krok 2: Podgląd danych produktów</h2>
+            </div>
+            <div class="card-body">
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <i class="fas fa-box"></i>
+                        <div>
+                            <span class="stat-label">Liczba produktów:</span>
+                            <span class="stat-value" id="product-count">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-tags"></i>
+                        <div>
+                            <span class="stat-label">Kategorie:</span>
+                            <span class="stat-value" id="category-count">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-controls">
+                    <div class="selection-controls">
+                        <button class="btn btn-secondary btn-sm" onclick="selectAll()">
+                            <i class="fas fa-check-square"></i> Zaznacz wszystkie
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="deselectAll()">
+                            <i class="fas fa-square"></i> Odznacz wszystkie
+                        </button>
+                        <span class="selected-info">Wybrano: <strong id="selected-count">0</strong> produktów</span>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="products-table" id="products-table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-col">
+                                    <input type="checkbox" id="select-all-checkbox" onchange="toggleAllCheckboxes(this)">
+                                </th>
+                                <th>Indeks</th>
+                                <th>Kategoria</th>
+                                <th>Nazwa</th>
+                                <th>EAN</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body">
+                            <!-- Rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Generate Descriptions -->
+        <section class="card" id="generation-section" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-cogs"></i>
+                <h2>Krok 3: Generuj opisy produktów</h2>
+            </div>
+            <div class="card-body">
+                <div class="generation-options">
+                    <div class="option-group">
+                        <label>
+                            <i class="fas fa-language"></i> Język opisów:
+                        </label>
+                        <select id="language-select" class="form-control">
+                            <option value="pl">Polski</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label>
+                            <i class="fas fa-palette"></i> Styl opisów:
+                        </label>
+                        <select id="style-select" class="form-control">
+                            <option value="professional">Profesjonalny</option>
+                            <option value="technical">Techniczny</option>
+                            <option value="casual">Casual/Lifestyle</option>
+                            <option value="persuasive">Perswazyjny</option>
+                        </select>
+                    </div>
+
+                    <div class="option-group">
+                        <label>
+                            <input type="checkbox" id="verify-ean-checkbox">
+                            Weryfikuj produkty po kodzie EAN w internecie (wolniejsze)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary btn-lg" id="generate-btn" onclick="startGeneration()">
+                        <i class="fas fa-magic"></i> Generuj opisy dla wybranych produktów
+                    </button>
+                </div>
+
+                <div class="progress-container" id="progress-container" style="display: none;">
+                    <div class="progress-info">
+                        <span id="progress-text">Generowanie opisów...</span>
+                        <span id="progress-percentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                    </div>
+                    <div class="progress-details" id="progress-details">
+                        Przetwarzanie: <span id="current-product">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 4: Export -->
+        <section class="card" id="export-section" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-download"></i>
+                <h2>Krok 4: Eksportuj wyniki</h2>
+            </div>
+            <div class="card-body">
+                <div class="export-info">
+                    <i class="fas fa-check-circle"></i>
+                    <p>Opisy produktów zostały wygenerowane pomyślnie!</p>
+                    <p class="export-stats">
+                        Wygenerowano <strong id="generated-count">0</strong> opisów produktów
+                    </p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-success btn-lg" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> Eksportuj do Excel (Shopify)
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportToCSV()">
+                        <i class="fas fa-file-csv"></i> Eksportuj do CSV
+                    </button>
+                    <button class="btn btn-info" onclick="exportAnalyticsToCSV()" title="Export Quality & SEO Analytics">
+                        <i class="fas fa-chart-bar"></i> Eksportuj Analitykę (V7.0)
+                    </button>
+                </div>
+
+                <div class="preview-results">
+                    <h3><i class="fas fa-eye"></i> Podgląd wygenerowanych opisów</h3>
+                    <div id="results-preview"></div>
+                </div>
+                
+                <!-- V7.0: QUALITY & SEO ANALYTICS DASHBOARD -->
+                <div class="quality-analytics" id="quality-analytics" style="margin-top: 2rem; display: none;">
+                    <h3><i class="fas fa-chart-line"></i> Analiza Jakości i SEO (V7.0)</h3>
+                    
+                    <!-- Overall Stats -->
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                        <div class="stat-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #28a745;" id="avg-quality-score">-</div>
+                            <div style="color: #6c757d; font-size: 0.875rem;">Avg Quality Score</div>
+                        </div>
+                        <div class="stat-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #007bff;" id="avg-seo-score">-</div>
+                            <div style="color: #6c757d; font-size: 0.875rem;">Avg SEO Score</div>
+                        </div>
+                        <div class="stat-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #ffc107;" id="total-keywords">-</div>
+                            <div style="color: #6c757d; font-size: 0.875rem;">Total Keywords</div>
+                        </div>
+                        <div class="stat-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #17a2b8;" id="avg-readability">-</div>
+                            <div style="color: #6c757d; font-size: 0.875rem;">Avg Readability</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Table -->
+                    <div style="overflow-x: auto; margin-top: 1rem;">
+                        <table class="table" style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #e9ecef;">
+                                <tr>
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6;">Produkt</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Quality</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">SEO</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Readability</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Keywords</th>
+                                    <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Top Keyword</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quality-table-body">
+                                <!-- Wypełniane dynamicznie -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer with GTV Poland Branding -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section company-info">
+                    <div class="footer-logo">
+                        <i class="fas fa-industry"></i>
+                        <h3>GTV Poland</h3>
+                    </div>
+                    <p class="company-description">
+                        Profesjonalne narzędzia AI dla e-commerce.<br>
+                        Automatyzacja opisów produktów z optymalizacją SEO.
+                    </p>
+                    <div class="company-contact">
+                        <p><i class="fas fa-globe"></i> <a href="https://gtv.com.pl" target="_blank">www.gtv.com.pl</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:kontakt@gtv.com.pl">kontakt@gtv.com.pl</a></p>
+                        <p><i class="fas fa-phone"></i> +48 XX XXX XX XX</p>
+                    </div>
+                </div>
+                
+                <!-- Product Features -->
+                <div class="footer-section features-list">
+                    <h4><i class="fas fa-star"></i> Funkcje Generatora</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Gemini 2.5 Pro AI</li>
+                        <li><i class="fas fa-check"></i> Keyword Analysis (20 fraz)</li>
+                        <li><i class="fas fa-check"></i> Quality Score (5 metryk)</li>
+                        <li><i class="fas fa-check"></i> SEO Analytics Dashboard</li>
+                        <li><i class="fas fa-check"></i> Batch Processing (5× szybciej)</li>
+                        <li><i class="fas fa-check"></i> Export do Shopify/CSV</li>
+                    </ul>
+                </div>
+                
+                <!-- Version Info -->
+                <div class="footer-section version-info">
+                    <h4><i class="fas fa-info-circle"></i> Informacje</h4>
+                    <p class="version-badge">
+                        <i class="fas fa-code-branch"></i>
+                        <strong>Wersja:</strong> 7.0.2 Advanced
+                    </p>
+                    <p class="version-badge">
+                        <i class="fas fa-calendar"></i>
+                        <strong>Data:</strong> 2025-12-29
+                    </p>
+                    <p class="version-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <strong>Status:</strong> Production Ready
+                    </p>
+                    <p class="footer-note">
+                        <i class="fas fa-robot"></i>
+                        Powered by Google Gemini 2.5 Pro
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="footer-bottom">
+                <p>&copy; 2025 <strong>GTV Poland</strong> - Wszystkie prawa zastrzeżone</p>
+                <p class="footer-links">
+                    <a href="#"><i class="fas fa-file-alt"></i> Regulamin</a>
+                    <span>|</span>
+                    <a href="#"><i class="fas fa-user-shield"></i> Polityka prywatności</a>
+                    <span>|</span>
+                    <a href="#"><i class="fas fa-question-circle"></i> Pomoc</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Przetwarzanie...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="js/validator.js"></script>
+    <script src="js/batchProcessor.js"></script>
+    <script src="js/keywordAnalyzer.js"></script>
+    <script src="js/contentQualityScorer.js"></script>
+    <script src="js/analyticsUI.js"></script>
+    <script src="js/frontendEnhancements.js"></script>
+    <script src="js/integration.js"></script>
+    <script src="js/ecommerceRules.js"></script>
+    <script src="js/enhancedPromptGenerator.js"></script>
+    <script src="js/qualityAutoRegeneration.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
